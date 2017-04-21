@@ -77,8 +77,6 @@ def parse_line(line):
             d = 2 ** 8 + d
 
         return (op1 << 14) + (rai << 11) + (rbi << 8) + d
-
-        print(op, ra, rbd)
     else:
         raise ValueError('Cannot parse `{}`'.format(line))
 

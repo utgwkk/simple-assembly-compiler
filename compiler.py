@@ -73,6 +73,8 @@ def parse_line(line):
         rai = int(ra)
 
         rbi, d = parse_addr(rbd)
+        if d < 0:
+            d = 2 ** 8 + d
 
         return (op1 << 14) + (rai << 11) + (rbi << 8) + d
 

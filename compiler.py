@@ -2,8 +2,11 @@ import sys
 import re
 
 
+def parse_addr(addr):
+    m = re.match(r'(\-?[0-9]+)\(([0-7])\)', addr)
+    return int(m.group(2)), int(m.group(1))
+
 def parse_line(line):
-    pat = re.compile(r'([a-z]+)(\s+([0-7]))?(\s+([0-7]|\-[0-9]+))?', re.IGNORECASE)
     ARIN = {
         'add': 0b0000,
         'sub': 0b0001,
@@ -24,12 +27,17 @@ def parse_line(line):
     DIV = {}
 
     line = line.strip().lower()
-    m = pat.match(line)
 
-    if m:
-        op = m.group(1)
-        rs = m.group(4)
-        rd = m.group(2)
+    pat_1 = re.compile(r'([a-z]+)(\s+([0-7]))?(\s+([0-7]|\-?[0-9]+))?$', re.IGNORECASE)
+    m1 = pat_1.match(line)
+
+    pat_ldst = re.compile(r'([a-z]+)\s+([0-7])\s+(\-?[0-9]+\([0-7]\))$')
+    m2 = pat_ldst.match(line)
+
+    if m1:
+        op = m1.group(1)
+        rs = m1.group(4)
+        rd = m1.group(2)
 
         op1 = 0
 
@@ -43,17 +51,30 @@ def parse_line(line):
         else:
             src = int(rs)
 
-        if op == 'ld':
-            op3 = 0b00
-        elif op == 'st':
-            op3 = 0b01
-        elif op == 'li' or op in DIV:
+        if op == 'li' or op in DIV:
             op3 = 0b10
         elif op in ARIN:
             op3 = 0b11
             op1 = ARIN[op]
 
         return (op3 << 14) + (src << 11) + (dest << 8) + (op1 << 4)
+    elif m2:
+        op = m2.group(1)
+        ra = m2.group(2)
+        rbd = m2.group(3)
+
+        if op == 'ld':
+            op1 = 0b00
+        elif op == 'st':
+            op1 = 0b01
+
+        rai = int(ra)
+
+        rbi, d = parse_addr(rbd)
+
+        return (op1 << 14) + (rai << 11) + (rbi << 8) + d
+
+        print(op, ra, rbd)
     else:
         raise ValueError('Cannot parse `{}`'.format(line))
 

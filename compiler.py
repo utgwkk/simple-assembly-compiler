@@ -56,6 +56,8 @@ def parse_line(line):
         elif op in ARIN:
             op3 = 0b11
             op1 = ARIN[op]
+        else:
+            raise ValueError('Invalid operation `{}`'.format(op))
 
         return (op3 << 14) + (src << 11) + (dest << 8) + (op1 << 4)
     elif m2:

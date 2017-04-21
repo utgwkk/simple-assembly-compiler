@@ -38,5 +38,5 @@ LD 2 22(3)
 ADD 1 2
 SUB 0 1
 OUT 0
-HALT
+HLT
 ```

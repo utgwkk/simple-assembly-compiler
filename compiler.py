@@ -2,11 +2,8 @@ import sys
 import re
 
 
-def parse_register(reg):
-    return int(re.sub(r'r\[([0-7])\]', r'\1', reg))
-
 def parse_line(line):
-    pat = re.compile(r'([a-z]+)(\s+(r\[[0-7]\]))?(\s+(r\[[0-7]\]|[0-9]+))?', re.IGNORECASE)
+    pat = re.compile(r'([a-z]+)(\s+([0-7]))?(\s+([0-7]|\-[0-9]+))?', re.IGNORECASE)
     ARIN = {
         'add': 0b0000,
         'sub': 0b0001,
@@ -39,12 +36,12 @@ def parse_line(line):
         if rd is None:
             dest = 0
         else:
-            dest = parse_register(rd)
+            dest = int(rd)
 
         if rs is None:
             src = 0
         else:
-            src = parse_register(rs)
+            src = int(rs)
 
         if op == 'ld':
             op3 = 0b00

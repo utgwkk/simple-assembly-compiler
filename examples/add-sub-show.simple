@@ -1,5 +1,5 @@
-ADD r[0] r[1]
-OUT r[0]
-SUB r[0] r[1]
-OUT r[0]
+ADD 0 1
+OUT 0
+SUB 0 1
+OUT 0
 HLT

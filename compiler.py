@@ -24,6 +24,11 @@ def parse_line(line):
         'hlt': 0b1111,
     }
 
+    OP2 = {
+        'li': 0b000,
+        'b': 0b100,
+    }
+
     DIV = {}
 
     line = line.strip().lower()
@@ -51,8 +56,11 @@ def parse_line(line):
         else:
             src = int(rs)
 
-        if op == 'li' or op in DIV:
+        if op in OP2:
             op3 = 0b10
+            op2 = OP2[op]
+            d = src
+            return (op3 << 14) + (op2 << 12) + (dest << 8) + d
         elif op in ARIN:
             op3 = 0b11
             op1 = ARIN[op]

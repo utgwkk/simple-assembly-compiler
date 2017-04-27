@@ -56,6 +56,9 @@ def parse_line(line):
         else:
             src = int(rs)
 
+        if op == 'out':
+            src, dest = dest, src
+
         if op in OP2:
             op3 = 0b10
             op2 = OP2[op]

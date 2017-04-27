@@ -27,6 +27,17 @@ def parse_line(line):
     OP2 = {
         'li': 0b000,
         'b': 0b100,
+        'be': 0b111,
+        'blt': 0b111,
+        'ble': 0b111,
+        'bne': 0b111,
+    }
+
+    BRANCH = {
+        'be': 0b000,
+        'blt': 0b001,
+        'ble': 0b010,
+        'bne': 0b011,
     }
 
     DIV = {}
@@ -62,6 +73,8 @@ def parse_line(line):
         if op in OP2:
             op3 = 0b10
             op2 = OP2[op]
+            if op in BRANCH:
+                dest = BRANCH[op]
             d = src
             return (op3 << 14) + (op2 << 12) + (dest << 8) + d
         elif op in ARIN:

@@ -80,6 +80,9 @@ def parse_line(line):
         elif op in ARIN:
             op3 = 0b11
             op1 = ARIN[op]
+            if op in {'sll', 'slr', 'srl', 'sra'}:
+                d = src
+                return (op3 << 14) + (0 << 11) + (dest << 8) + (op1 << 4) + d
         else:
             raise ValueError('Invalid operation `{}`'.format(op))
 
@@ -117,6 +120,9 @@ CONTENT BEGIN''')
 
     for line in sys.stdin:
         line = line.strip()
+        line = re.sub(r';(.+)$', '', line)
+        if not line:
+            continue
         print('  {}     :   {:016b}; -- {}'.format(cnt, parse_line(line), line))
         cnt += 1
     print('  [{}..{}]:0000000000000000; -- MEMORY'.format(cnt, MAXCNT))

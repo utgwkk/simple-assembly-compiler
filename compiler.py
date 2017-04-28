@@ -2,7 +2,7 @@ import sys
 import re
 
 
-def sign_ext(d, m):
+def sign_ext(d, m=8):
     if d < 0:
         d = 2 ** m + d
     return d

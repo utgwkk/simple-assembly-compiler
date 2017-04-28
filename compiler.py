@@ -31,6 +31,10 @@ def parse_line(line):
         'hlt': 0b1111,
     }
 
+    SHIFTS = {
+        'sll', 'slr', 'srl', 'sra'
+    }
+
     OP2 = {
         'li': 0b000,
         'b': 0b100,
@@ -57,12 +61,18 @@ def parse_line(line):
 
     if operation in ARIN:
         op1 = 0b11
+        op3 = ARIN[operation]
+        Rd = int(operand[0])
+        Rs = int(operand[1])
+        return (op1 << 14) + (Rs << 11) + (Rd << 8) + (op3 << 4)
     elif operation in OP2:
         op1 = 0b10
         d = parse_addr(operand[1])
     elif operation == 'ld':
         op1 = 0b00
-        d = parse_addr(operand[1])
+        Ra = int(operand[0])
+        Rb, d = parse_addr(operand[1])
+        return (op1 << 14) + (Ra << 11) + (Rb << 8) + d
     elif operation == 'st':
         op1 = 0b01
         Ra = int(operand[0])

@@ -2,6 +2,12 @@ import sys
 import re
 
 
+def sign_ext(d, m):
+    if d < 0:
+        d = 2 ** m + d
+    return d
+
+
 def parse_addr(addr):
     m = re.match(r'(\-?[0-9]+)\(([0-7])\)', addr)
     return int(m.group(2)), int(m.group(1))
@@ -75,8 +81,8 @@ def parse_line(line):
             op2 = OP2[op]
             if op in BRANCH:
                 dest = BRANCH[op]
-            d = src
-            return (op3 << 14) + (op2 << 12) + (dest << 8) + d
+            d = sign_ext(src, 8)
+            return (op3 << 14) + (op2 << 11) + (dest << 8) + d
         elif op in ARIN:
             op3 = 0b11
             op1 = ARIN[op]
@@ -113,7 +119,7 @@ def main():
     print('''WIDTH=16;
 DEPTH=4096;
 
-ADDRESS_RADIX=UNS;
+ADDRESS_RADIX=HEX;
 DATA_RADIX=BIN;
 
 CONTENT BEGIN''')
@@ -123,9 +129,9 @@ CONTENT BEGIN''')
         line = re.sub(r';(.+)$', '', line)
         if not line:
             continue
-        print('  {}     :   {:016b}; -- {}'.format(cnt, parse_line(line), line))
+        print('  {:x}     :   {:016b}; -- {}'.format(cnt, parse_line(line), line))
         cnt += 1
-    print('  [{}..{}]:0000000000000000; -- MEMORY'.format(cnt, MAXCNT))
+    print('  [{}..{}]:0; -- MEMORY'.format(cnt, MAXCNT))
     print('END;')
 
 if __name__ == '__main__':

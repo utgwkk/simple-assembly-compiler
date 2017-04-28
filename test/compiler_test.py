@@ -145,6 +145,18 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('MOV 2 3')
         )
 
+    def test_ADI(self):
+        self.assertEqual(
+            0b1100001001110011,
+            compiler.parse_line('ADI 2 3')
+        )
+
+    def test_ADI_sign_ext(self):
+        self.assertEqual(
+            0b1100001001111101,
+            compiler.parse_line('ADI 2 -3')
+        )
+
     def test_SLL(self):
         self.assertEqual(
             0b1100001010000011,

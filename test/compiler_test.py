@@ -85,5 +85,17 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('SRA 2 3')
         )
 
+    def test_IN(self):
+        self.assertEqual(
+            0b1100001111000000,
+            compiler.parse_line('IN 3')
+        )
+
+    def test_OUT(self):
+        self.assertEqual(
+            0b1101100011010000,
+            compiler.parse_line('OUT 3')
+        )
+
 if __name__ == '__main__':
     unittest.main()

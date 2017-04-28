@@ -66,6 +66,12 @@ def parse_line(line):
             Rd = int(operand[0])
             d = int(operand[1])
             return (op1 << 14) + (Rd << 8) + (op3 << 4) + d
+        elif operation == 'in':
+            Rd = int(operand[0])
+            return (op1 << 14) + (Rd << 8) + (op3 << 4)
+        elif operation == 'out':
+            Rs = int(operand[0])
+            return (op1 << 14) + (Rs << 11) + (op3 << 4)
         else:
             Rd = int(operand[0])
             Rs = int(operand[1])

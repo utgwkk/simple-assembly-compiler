@@ -22,6 +22,7 @@ def parse_line(line):
         'xor': 0b0100,
         'cmp': 0b0101,
         'mov': 0b0110,
+        'adi': 0b0111,
         'sll': 0b1000,
         'slr': 0b1001,
         'srl': 0b1010,
@@ -32,7 +33,7 @@ def parse_line(line):
     }
 
     SHIFTS = {
-        'sll', 'slr', 'srl', 'sra'
+        'sll', 'slr', 'srl', 'sra', 'adi'
     }
 
     OP2 = {
@@ -64,7 +65,10 @@ def parse_line(line):
         op3 = ARIN[operation]
         if operation in SHIFTS:
             Rd = int(operand[0])
-            d = int(operand[1])
+            if operation == 'adi':
+                d = sign_ext(int(operand[1]), 4)
+            else:
+                d = int(operand[1])
             return (op1 << 14) + (Rd << 8) + (op3 << 4) + d
         elif operation == 'in':
             Rd = int(operand[0])
@@ -108,7 +112,7 @@ def main():
 DEPTH=4096;
 
 ADDRESS_RADIX=HEX;
-DATA_RADIX=BIN;
+DATA_RADIX=DEC;
 
 CONTENT BEGIN''')
 
@@ -117,7 +121,7 @@ CONTENT BEGIN''')
         line = re.sub(r';.+$', '', line)
         if not line:
             continue
-        print('  {:x}     :   {:016b}; -- {}'.format(cnt, parse_line(line), line))
+        print('  {:x}     :   {:d}; -- {}'.format(cnt, parse_line(line), line))
         cnt += 1
     print('  [{:x}..{:x}]:0; -- MEMORY'.format(cnt, MAXCNT))
     print('END;')

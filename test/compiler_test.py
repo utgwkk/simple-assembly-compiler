@@ -13,6 +13,12 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('LD 1 5(2)')
         )
 
+    def test_LD_sign_ext(self):
+        self.assertEqual(
+            0b0000101011111011,
+            compiler.parse_line('LD 1 -5(2)')
+        )
+
     def test_ST(self):
         self.assertEqual(
             0b0100101000000101,

@@ -49,10 +49,22 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('LI 1 15')
         )
 
+    def test_LI_sign_ext(self):
+        self.assertEqual(
+            0b1000000111110001,
+            compiler.parse_line('LI 1 -15')
+        )
+
     def test_B(self):
         self.assertEqual(
             0b1010000100001111,
             compiler.parse_line('B 1 15')
+        )
+
+    def test_B_sign_ext(self):
+        self.assertEqual(
+            0b1010000111110001,
+            compiler.parse_line('B 1 -15')
         )
 
     def test_BE(self):

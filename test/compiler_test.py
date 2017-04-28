@@ -43,6 +43,30 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('B 1 15')
         )
 
+    def test_BE(self):
+        self.assertEqual(
+            0b1011100000001111,
+            compiler.parse_line('BE 15')
+        )
+
+    def test_BLT(self):
+        self.assertEqual(
+            0b1011100100001111,
+            compiler.parse_line('BLT 15')
+        )
+
+    def test_BLE(self):
+        self.assertEqual(
+            0b1011101000001111,
+            compiler.parse_line('BLE 15')
+        )
+
+    def test_BNE(self):
+        self.assertEqual(
+            0b1011101100001111,
+            compiler.parse_line('BNE 15')
+        )
+
     def test_AND(self):
         self.assertEqual(
             0b1101101000100000,

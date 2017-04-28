@@ -97,5 +97,11 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('OUT 3')
         )
 
+    def test_HLT(self):
+        self.assertEqual(
+            0b1100000011110000,
+            compiler.parse_line('HLT')
+        )
+
 if __name__ == '__main__':
     unittest.main()

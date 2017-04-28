@@ -72,6 +72,8 @@ def parse_line(line):
         elif operation == 'out':
             Rs = int(operand[0])
             return (op1 << 14) + (Rs << 11) + (op3 << 4)
+        elif operation == 'hlt':
+            return 0b1100000011110000
         else:
             Rd = int(operand[0])
             Rs = int(operand[1])

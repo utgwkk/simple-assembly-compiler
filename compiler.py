@@ -81,7 +81,9 @@ def parse_line(line):
             op2 = OP2[op]
             if op in BRANCH:
                 dest = BRANCH[op]
-            d = sign_ext(src, 8)
+                d = sign_ext(dest, 8)
+            else:
+                d = sign_ext(src, 8)
             return (op3 << 14) + (op2 << 11) + (dest << 8) + d
         elif op in ARIN:
             op3 = 0b11
@@ -131,7 +133,7 @@ CONTENT BEGIN''')
             continue
         print('  {:x}     :   {:016b}; -- {}'.format(cnt, parse_line(line), line))
         cnt += 1
-    print('  [{}..{}]:0; -- MEMORY'.format(cnt, MAXCNT))
+    print('  [{:x}..{:x}]:0; -- MEMORY'.format(cnt, MAXCNT))
     print('END;')
 
 if __name__ == '__main__':

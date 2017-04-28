@@ -1,0 +1,37 @@
+; 0 : data
+; 1 : length - 1
+; 2 : i
+; 3 : j
+; 4 : data[j - 1]
+; 5 : data[j]
+; 6 : swap
+; 7 : constant (1)
+
+LI 0 128 ; data
+SLL 0 3 ; data <<= 8
+LI 1 1023 ; length - 1
+LI 2 0 ; i = 0
+LI 7 1 ; one = 1
+CMP 1 2 ; (length - 1) - i
+BLE 20 ; if ((length - 1) - i <= 0) goto end_outer_for
+MOV 3 1 ; j = length - 1
+CMP 3 2 ; j - i ; begin_inner_for
+BLE 14 ; if (j - i <= 0) goto end_inner_for
+MOV 4 0 ; tmp = data
+ADD 4 3 ; tmp = data + j
+LD 4 -1(4) ; tmp = *(data + j - 1)
+MOV 5 0 ; tmp2 = data
+ADD 5 3 ; tmp2 = data + j
+LD 5 0(5) ; tmp2 = *(data + j)
+CMP 4 5 ; data[j - 1] - data[j]
+BLE 5 ; if (data[j - 1] <= data[j]) goto end_if_statement
+MOV 6 5 ; swap = data[j] ; begin_if_statement
+MOV 5 0 ; tmp2 = data
+ADD 5 3 ; tmp2 = data + j
+ST 4 0(5) ; data[j] = data[j - 1]
+ST 6 -1(5) ; data[j - 1] = swap
+SUB 3 7 ; j -= 1 ; end_if_statement
+B -17 ; goto begin_inner_for
+ADD 2 7 ; i += 1 ; end_inner_for
+B -22 ; goto begin_outer_for
+HLT ; end_outer_for

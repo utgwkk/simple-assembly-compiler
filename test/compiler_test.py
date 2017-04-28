@@ -61,5 +61,29 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('MOV 2 3')
         )
 
+    def test_SLL(self):
+        self.assertEqual(
+            0b1100001010000011,
+            compiler.parse_line('SLL 2 3')
+        )
+
+    def test_SLR(self):
+        self.assertEqual(
+            0b1100001010010011,
+            compiler.parse_line('SLR 2 3')
+        )
+
+    def test_SRL(self):
+        self.assertEqual(
+            0b1100001010100011,
+            compiler.parse_line('SRL 2 3')
+        )
+
+    def test_SRA(self):
+        self.assertEqual(
+            0b1100001010110011,
+            compiler.parse_line('SRA 2 3')
+        )
+
 if __name__ == '__main__':
     unittest.main()

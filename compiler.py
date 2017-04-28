@@ -62,9 +62,14 @@ def parse_line(line):
     if operation in ARIN:
         op1 = 0b11
         op3 = ARIN[operation]
-        Rd = int(operand[0])
-        Rs = int(operand[1])
-        return (op1 << 14) + (Rs << 11) + (Rd << 8) + (op3 << 4)
+        if operation in SHIFTS:
+            Rd = int(operand[0])
+            d = int(operand[1])
+            return (op1 << 14) + (Rd << 8) + (op3 << 4) + d
+        else:
+            Rd = int(operand[0])
+            Rs = int(operand[1])
+            return (op1 << 14) + (Rs << 11) + (Rd << 8) + (op3 << 4)
     elif operation in OP2:
         op1 = 0b10
         d = parse_addr(operand[1])

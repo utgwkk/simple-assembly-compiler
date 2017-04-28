@@ -31,6 +31,18 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('SUB 2 3')
         )
 
+    def test_LI(self):
+        self.assertEqual(
+            0b1000000100001111,
+            compiler.parse_line('LI 1 15')
+        )
+
+    def test_B(self):
+        self.assertEqual(
+            0b1010000100001111,
+            compiler.parse_line('B 1 15')
+        )
+
     def test_AND(self):
         self.assertEqual(
             0b1101101000100000,

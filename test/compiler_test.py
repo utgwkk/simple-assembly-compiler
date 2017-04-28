@@ -73,10 +73,22 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('BE 15')
         )
 
+    def test_BE_sign_ext(self):
+        self.assertEqual(
+            0b1011100011110001,
+            compiler.parse_line('BE -15')
+        )
+
     def test_BLT(self):
         self.assertEqual(
             0b1011100100001111,
             compiler.parse_line('BLT 15')
+        )
+
+    def test_BLT_sign_ext(self):
+        self.assertEqual(
+            0b1011100111110001,
+            compiler.parse_line('BLT -15')
         )
 
     def test_BLE(self):
@@ -85,10 +97,22 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('BLE 15')
         )
 
+    def test_BLE_sign_ext(self):
+        self.assertEqual(
+            0b1011101011110001,
+            compiler.parse_line('BLE -15')
+        )
+
     def test_BNE(self):
         self.assertEqual(
             0b1011101100001111,
             compiler.parse_line('BNE 15')
+        )
+
+    def test_BNE_sign_ext(self):
+        self.assertEqual(
+            0b1011101111110001,
+            compiler.parse_line('BNE -15')
         )
 
     def test_AND(self):

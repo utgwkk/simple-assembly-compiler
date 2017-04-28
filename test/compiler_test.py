@@ -25,6 +25,12 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('ST 1 5(2)')
         )
 
+    def test_ST_sign_ext(self):
+        self.assertEqual(
+            0b0100101011111011,
+            compiler.parse_line('ST 1 -5(2)')
+        )
+
     def test_ADD(self):
         self.assertEqual(
             0b1101101000000000,

@@ -80,7 +80,14 @@ def parse_line(line):
             return (op1 << 14) + (Rs << 11) + (Rd << 8) + (op3 << 4)
     elif operation in OP2:
         op1 = 0b10
-        d = parse_addr(operand[1])
+        op2 = OP2[operation]
+        if operation in BRANCH:
+            d = sign_ext(int(operand[0]))
+            return (op1 << 14) + (op2 << 11) + (BRANCH[operation] << 8) + d
+        else:
+            Rb = int(operand[0])
+            d = sign_ext(int(operand[1]))
+            return (op1 << 14) + (op2 << 11) + (Rb << 8) + d
     elif operation == 'ld':
         op1 = 0b00
         Ra = int(operand[0])

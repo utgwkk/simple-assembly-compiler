@@ -68,10 +68,22 @@ class CompilerTest(unittest.TestCase):
             int(compiler.parse_line('B 1 -15'))
         )
 
+    def test_B_label(self):
+        self.assertEqual(
+            intermediate.Label('hoge'),
+            compiler.parse_line('B 1 hoge').d
+        )
+
     def test_BE(self):
         self.assertEqual(
             0b1011100000001111,
             int(compiler.parse_line('BE 15'))
+        )
+
+    def test_BE_label(self):
+        self.assertEqual(
+            intermediate.Label('hoge'),
+            compiler.parse_line('BE hoge').d
         )
 
     def test_BE_sign_ext(self):

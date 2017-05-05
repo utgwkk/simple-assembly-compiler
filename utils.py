@@ -10,3 +10,7 @@ def sign_ext(d, m=8):
 def parse_addr(addr):
     m = re.match(r'(\-?[0-9]+)\(([0-7])\)', addr)
     return int(m.group(2)), sign_ext(int(m.group(1)))
+
+
+def distance(src, dst):
+    return dst - src

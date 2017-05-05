@@ -20,3 +20,10 @@ class Label:
 
     def __str__(self):
         return 'Label(name={0}, lineno={1})'.format(self.name, self.lineno)
+
+class UnknownLabel(Label):
+    def __init__(self, name):
+        super(UnknownLabel, self).__init__(name, -1)
+
+    def __str__(self):
+        return 'UnknownLabel(name={0})'.format(self.name)

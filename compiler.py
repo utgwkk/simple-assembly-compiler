@@ -59,39 +59,39 @@ def parse_line(line):
                 d = utils.sign_ext(int(operand[1]), 4)
             else:
                 d = int(operand[1])
-            return int(Operation(op1, 0, Rd, (op3 << 4) + d))
+            return Operation(op1, 0, Rd, (op3 << 4) + d)
         elif operation == 'in':
             Rd = int(operand[0])
-            return int(Operation(op1, 0, Rd, op3 << 4))
+            return Operation(op1, 0, Rd, op3 << 4)
         elif operation == 'out':
             Rs = int(operand[0])
-            return int(Operation(op1, Rs, 0, op3 << 4))
+            return Operation(op1, Rs, 0, op3 << 4)
         elif operation == 'hlt':
-            return int(Operation(op1, 0, 0, op3 << 4))
+            return Operation(op1, 0, 0, op3 << 4)
         else:
             Rd = int(operand[0])
             Rs = int(operand[1])
-            return int(Operation(op1, Rs, Rd, op3 << 4))
+            return Operation(op1, Rs, Rd, op3 << 4)
     elif operation in OP2:
         op1 = 0b10
         op2 = OP2[operation]
         if operation in BRANCH:
             d = utils.sign_ext(int(operand[0]))
-            return int(Operation(op1, op2, 0, (BRANCH[operation] << 8) + d))
+            return Operation(op1, op2, 0, (BRANCH[operation] << 8) + d)
         else:
             Rb = int(operand[0])
             d = utils.sign_ext(int(operand[1]))
-            return int(Operation(op1, op2, Rb, d))
+            return Operation(op1, op2, Rb, d)
     elif operation == 'ld':
         op1 = 0b00
         Ra = int(operand[0])
         Rb, d = utils.parse_addr(operand[1])
-        return int(Operation(op1, Ra, Rb, d))
+        return Operation(op1, Ra, Rb, d)
     elif operation == 'st':
         op1 = 0b01
         Ra = int(operand[0])
         Rb, d = utils.parse_addr(operand[1])
-        return int(Operation(op1, Ra, Rb, d))
+        return Operation(op1, Ra, Rb, d)
     else:
         raise ValueError('Cannot parse `{}`',format(line))
 

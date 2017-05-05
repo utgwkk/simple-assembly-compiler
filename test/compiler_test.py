@@ -199,5 +199,12 @@ class CompilerTest(unittest.TestCase):
             compiler.parse_line('HLT')
         )
 
+    def test_parse_error(self):
+        self.assertRaises(
+            ValueError,
+            compiler.parse_line,
+            'HOGE 1 2'
+        )
+
 if __name__ == '__main__':
     unittest.main()

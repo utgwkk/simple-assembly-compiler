@@ -2,6 +2,7 @@ import unittest
 import sys
 sys.path.append('.')
 import compiler
+import intermediate
 
 class CompilerTest(unittest.TestCase):
     def setUp(self):
@@ -197,6 +198,12 @@ class CompilerTest(unittest.TestCase):
         self.assertEqual(
             0b1100000011110000,
             int(compiler.parse_line('HLT'))
+        )
+
+    def test_label(self):
+        self.assertEqual(
+            'hoge',
+            compiler.parse_line('hoge:').name
         )
 
     def test_parse_error(self):

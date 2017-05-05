@@ -1,9 +1,12 @@
 import sys
 import utils
-from intermediate import Operation
+from intermediate import *
 
 
-def parse_line(line):
+def parse_line(line, labels=None):
+    if labels is None:
+        labels = dict()
+
     ARIN = {
         'add': 0b0000,
         'sub': 0b0001,
@@ -43,6 +46,10 @@ def parse_line(line):
     }
 
     line = line.strip().lower()
+
+    if line.endswith(':'):
+        labelname = line[:-1]
+        return UnknownLabel(labelname)
 
     xs = line.split()
 

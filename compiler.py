@@ -3,10 +3,7 @@ import utils
 from intermediate import *
 
 
-def parse_line(line, labels=None):
-    if labels is None:
-        labels = dict()
-
+def parse_line(line):
     ARIN = {
         'add': 0b0000,
         'sub': 0b0001,
@@ -49,7 +46,7 @@ def parse_line(line, labels=None):
 
     if line.endswith(':'):
         labelname = line[:-1]
-        return UnknownLabel(labelname)
+        return Label(labelname)
 
     xs = line.split()
 
@@ -83,11 +80,19 @@ def parse_line(line, labels=None):
         op1 = 0b10
         op2 = OP2[operation]
         if operation in BRANCH:
-            d = utils.sign_ext(int(operand[0]))
-            return Operation(op1, op2, 0, (BRANCH[operation] << 8) + d)
+            if operand[0][-1].isdigit():
+                d = RelativeLine(int(operand[0]))
+            else:
+                d = Label(operand[0])
+            return Operation(op1, op2, BRANCH[operation], d)
         else:
             Rb = int(operand[0])
-            d = utils.sign_ext(int(operand[1]))
+            if operation == 'li':
+                d = utils.sign_ext(int(operand[1]))
+            elif operand[1][-1].isdigit():
+                d = RelativeLine(int(operand[1]))
+            else:
+                d = Label(operand[1])
             return Operation(op1, op2, Rb, d)
     elif operation == 'ld':
         op1 = 0b00
@@ -105,6 +110,37 @@ def parse_line(line, labels=None):
 def main():
     cnt = 0
     MAXCNT = 4095
+
+    program = []
+    labels = dict()
+
+    for line in sys.stdin:
+        line = line.strip()
+        if not line:
+            continue
+
+        result = parse_line(line)
+
+        if isinstance(result, Operation):
+            program.append(result)
+            cnt += 1
+        elif isinstance(result, Label):
+            labels[result.name] = cnt
+        else:
+            raise ValueError('yabai at cnt {}'.format(cnt))
+
+    # Resolve labels
+    for idx, code in enumerate(program):
+        if isinstance(code.d, Label):
+            if code.d.name in labels:
+                program[idx].d = utils.sign_ext(utils.distance(idx, labels[code.d.name]))
+            else:
+                raise KeyError('Label `{}` does not exist'.format(code.d.name))
+    
+    dump(program)
+
+
+def dump(program):
     print('''WIDTH=16;
 DEPTH=4096;
 
@@ -112,16 +148,10 @@ ADDRESS_RADIX=HEX;
 DATA_RADIX=DEC;
 
 CONTENT BEGIN''')
-
-    for line in sys.stdin:
-        line = line.strip()
-        line = re.sub(r';.+$', '', line)
-        if not line:
-            continue
-        print('  {:x}     :   {:d}; -- {}'.format(cnt, parse_line(line), line))
-        cnt += 1
-    print('  [{:x}..{:x}]:0; -- MEMORY'.format(cnt, MAXCNT))
+    for cnt, line in enumerate(program):
+        print('  {0:x}     :   {1:d};'.format(cnt, int(line)))
     print('END;')
+
 
 if __name__ == '__main__':
     main()

@@ -1,16 +1,5 @@
 import sys
-import re
-
-
-def sign_ext(d, m=8):
-    if d < 0:
-        d = 2 ** m + d
-    return d
-
-
-def parse_addr(addr):
-    m = re.match(r'(\-?[0-9]+)\(([0-7])\)', addr)
-    return int(m.group(2)), sign_ext(int(m.group(1)))
+import utils
 
 
 def parse_line(line):
@@ -66,7 +55,7 @@ def parse_line(line):
         if operation in SHIFTS:
             Rd = int(operand[0])
             if operation == 'adi':
-                d = sign_ext(int(operand[1]), 4)
+                d = utils.sign_ext(int(operand[1]), 4)
             else:
                 d = int(operand[1])
             return (op1 << 14) + (Rd << 8) + (op3 << 4) + d
@@ -86,21 +75,21 @@ def parse_line(line):
         op1 = 0b10
         op2 = OP2[operation]
         if operation in BRANCH:
-            d = sign_ext(int(operand[0]))
+            d = utils.sign_ext(int(operand[0]))
             return (op1 << 14) + (op2 << 11) + (BRANCH[operation] << 8) + d
         else:
             Rb = int(operand[0])
-            d = sign_ext(int(operand[1]))
+            d = utils.sign_ext(int(operand[1]))
             return (op1 << 14) + (op2 << 11) + (Rb << 8) + d
     elif operation == 'ld':
         op1 = 0b00
         Ra = int(operand[0])
-        Rb, d = parse_addr(operand[1])
+        Rb, d = utils.parse_addr(operand[1])
         return (op1 << 14) + (Ra << 11) + (Rb << 8) + d
     elif operation == 'st':
         op1 = 0b01
         Ra = int(operand[0])
-        Rb, d = parse_addr(operand[1])
+        Rb, d = utils.parse_addr(operand[1])
         return (op1 << 14) + (Ra << 11) + (Rb << 8) + d
     else:
         raise ValueError('Cannot parse `{}`',format(line))

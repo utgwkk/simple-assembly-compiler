@@ -1,5 +1,6 @@
 import sys
 import utils
+import re
 from intermediate import *
 
 
@@ -81,7 +82,7 @@ def parse_line(line):
         op2 = OP2[operation]
         if operation in BRANCH:
             if operand[0][-1].isdigit():
-                d = RelativeLine(int(operand[0]))
+                d = RelativeLine(int(operand[0]) - 1)
             else:
                 d = Label(operand[0])
             return Operation(op1, op2, BRANCH[operation], d)
@@ -96,13 +97,13 @@ def parse_line(line):
             return Operation(op1, op2, Rb, d)
     elif operation == 'ld':
         op1 = 0b00
-        Ra = int(operand[0])
-        Rb, d = utils.parse_addr(operand[1])
+        Rb = int(operand[0])
+        Ra, d = utils.parse_addr(operand[1])
         return Operation(op1, Ra, Rb, d)
     elif operation == 'st':
         op1 = 0b01
-        Ra = int(operand[0])
-        Rb, d = utils.parse_addr(operand[1])
+        Rb = int(operand[0])
+        Ra, d = utils.parse_addr(operand[1])
         return Operation(op1, Ra, Rb, d)
     else:
         raise ValueError('Cannot parse `{}`',format(line))
@@ -116,6 +117,7 @@ def main():
 
     for line in sys.stdin:
         line = line.strip()
+        line = re.sub(r';.+', '', line)
         if not line:
             continue
 
@@ -133,7 +135,7 @@ def main():
     for idx, code in enumerate(program):
         if isinstance(code.d, Label):
             if code.d.name in labels:
-                program[idx].d = utils.sign_ext(utils.distance(idx, labels[code.d.name]))
+                program[idx].d = utils.sign_ext(utils.distance(idx, labels[code.d.name])) - 1
             else:
                 raise KeyError('Label `{}` does not exist'.format(code.d.name))
     
@@ -145,11 +147,11 @@ def dump(program):
 DEPTH=4096;
 
 ADDRESS_RADIX=HEX;
-DATA_RADIX=DEC;
+DATA_RADIX=BIN;
 
 CONTENT BEGIN''')
     for cnt, line in enumerate(program):
-        print('  {0:x}     :   {1:d};'.format(cnt, int(line)))
+        print('  {0:x}     :   {1:016b};'.format(cnt, int(line)))
     print('END;')
 
 

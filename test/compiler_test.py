@@ -10,25 +10,25 @@ class CompilerTest(unittest.TestCase):
 
     def test_LD(self):
         self.assertEqual(
-            0b0000101000000101,
+            0b0001000100000101,
             int(compiler.parse_line('LD 1 5(2)'))
         )
 
     def test_LD_sign_ext(self):
         self.assertEqual(
-            0b0000101011111011,
+            0b0001000111111011,
             int(compiler.parse_line('LD 1 -5(2)'))
         )
 
     def test_ST(self):
         self.assertEqual(
-            0b0100101000000101,
+            0b0101000100000101,
             int(compiler.parse_line('ST 1 5(2)'))
         )
 
     def test_ST_sign_ext(self):
         self.assertEqual(
-            0b0100101011111011,
+            0b0101000111111011,
             int(compiler.parse_line('ST 1 -5(2)'))
         )
 

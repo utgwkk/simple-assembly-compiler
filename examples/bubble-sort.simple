@@ -1,37 +1,57 @@
-; 0 : data
-; 1 : length - 1
-; 2 : i
-; 3 : j
-; 4 : data[j - 1]
-; 5 : data[j]
-; 6 : swap
+init:
+  XOR 7 7 ; initialize $7 to 0
+  LD 0 0(7) ; load offset of data
+  AND 6 6 ; NOP
+  LD 1 1(7) ; load length of data
+  AND 6 6 ; NOP
+  LI 6 0 ; $zero
+  LI 7 1 ; $one
 
-LI 0 64 ; data
-SLL 0 4 ; data <<= 4
-LI 1 512 ; length = 512
-SLL 1 1 ; length <<= 1
-ADI 1 -1 ; length -= 1 ; 1023
-LI 2 0 ; i = 0
-CMP 2 1 ; (length - 1) - i
-BLE 20 ; if ((length - 1) - i <= 0) goto end_outer_for
-MOV 3 1 ; j = length - 1
-CMP 3 2 ; j - i ; begin_inner_for
-BLE 14 ; if (j - i <= 0) goto end_inner_for
-MOV 4 0 ; tmp = data
-ADD 4 3 ; tmp = data + j
-LD 4 -1(4) ; tmp = *(data + j - 1)
-MOV 5 0 ; tmp2 = data
-ADD 5 3 ; tmp2 = data + j
-LD 5 0(5) ; tmp2 = *(data + j)
-CMP 4 5 ; data[j - 1] - data[j]
-BLE 5 ; if (data[j - 1] <= data[j]) goto end_if_statement
-MOV 6 5 ; swap = data[j] ; begin_if_statement
-MOV 5 0 ; tmp2 = data
-ADD 5 3 ; tmp2 = data + j
-ST 4 0(5) ; data[j] = data[j - 1]
-ST 6 -1(5) ; data[j - 1] = swap
-ADI 3 -1 ; j -= 1 ; end_if_statement
-B 0 -17 ; goto begin_inner_for
-ADI 2 1 ; i += 1 ; end_inner_for
-B 0 -22 ; goto begin_outer_for
-HLT ; end_outer_for
+init_outer:
+  LI 2 0 ; $i = 0
+
+cond_outer:
+  ADD 2 7
+  CMP 2 1 ; $i + 1 == $length ??
+  BE end_outer
+  SUB 2 7
+
+init_inner:
+  MOV 3 1 ; $j = $length
+  SUB 3 7 ; $j -= 1
+
+cond_inner:
+  CMP 3 2 ; $j <= $i ??
+  BLE end_inner
+
+body_inner:
+  ADD 3 0 ; $j += $offset
+  LD 4 0(3) ; $a[j]
+  AND 6 6 ; NOP
+  LD 5 -1(3) ; $a[j - 1]
+  AND 6 6 ; NOP
+  SUB 3 0 ; $j -= $offset
+  CMP 5 4 ; if ($a[j - 1] - a[j] < 0)
+  BLT if_upper_is_small
+  OUT 6 ; output 0
+  B 0 end_if
+
+if_upper_is_small:
+  OUT 7 ; output 1
+  ADD 3 0 ; $j += $offset
+  ST 4 -1(3) ; $a[j - 1] = $a[j]
+  AND 6 6 ; NOP
+  ST 5 0(3) ; $a[j] = $a[j - 1]
+  AND 6 6 ; NOP
+  SUB 3 0 ; $j -= $offset
+
+end_if:
+  SUB 3 7 ; $j -= 1
+  B 0 cond_inner
+
+end_inner:
+  ADD 2 7 ; $i += 1
+  B 0 cond_outer
+
+end_outer:
+  HLT

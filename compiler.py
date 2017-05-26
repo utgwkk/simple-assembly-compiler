@@ -116,8 +116,8 @@ def main():
     labels = dict()
 
     for line in sys.stdin:
-        line = line.strip()
         line = re.sub(r';.+', '', line)
+        line = line.strip()
         if not line:
             continue
 

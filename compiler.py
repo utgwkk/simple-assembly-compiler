@@ -82,7 +82,7 @@ def parse_line(line):
         op2 = OP2[operation]
         if operation in BRANCH:
             if operand[0][-1].isdigit():
-                d = RelativeLine(int(operand[0]) - 1)
+                d = RelativeLine(int(operand[0]))
             else:
                 d = Label(operand[0])
             return Operation(op1, op2, BRANCH[operation], d)

@@ -116,7 +116,7 @@ def main():
     labels = dict()
 
     for line in sys.stdin:
-        line = re.sub(r';.+', '', line)
+        line = re.sub(r';.*', '', line)
         line = line.strip()
         if not line:
             continue
@@ -135,7 +135,9 @@ def main():
     for idx, code in enumerate(program):
         if isinstance(code.d, Label):
             if code.d.name in labels:
-                program[idx].d = utils.sign_ext(utils.distance(idx, labels[code.d.name])) - 1
+                dist = utils.sign_ext(utils.distance(idx, labels[code.d.name]) - 1)
+                print('{} -> {} : {}'.format(idx, code.d.name, dist), file=sys.stderr)
+                program[idx].d = dist
             else:
                 raise KeyError('Label `{}` does not exist'.format(code.d.name))
     
@@ -146,12 +148,12 @@ def dump(program):
     print('''WIDTH=16;
 DEPTH=4096;
 
-ADDRESS_RADIX=HEX;
+ADDRESS_RADIX=BIN;
 DATA_RADIX=BIN;
 
 CONTENT BEGIN''')
     for cnt, line in enumerate(program):
-        print('  {0:x}     :   {1:016b};'.format(cnt, int(line)))
+        print('  {0:016b}     :   {1:016b};'.format(cnt, int(line)))
     print('END;')
 
 

@@ -3,7 +3,7 @@ import re
 
 def sign_ext(d, m=8):
     if d < 0:
-        d = 2 ** m + d
+        d = (2 ** m + d) & ~(1 << (m + 1))
     return d
 
 

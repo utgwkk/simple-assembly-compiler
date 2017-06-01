@@ -1,14 +1,14 @@
 XOR 7 7 ; initialize $7 to 0
 LD 0 0(7) ; load offset - 1 of data
 OUT 0
-LD 1 1(0)
+LD 1 0(0)
 OUT 1
-LD 2 2(0)
+LD 2 1(0)
 OUT 2
-ST 1 2(0)
-ST 2 1(0)
+ST 1 1(0)
+ST 2 0(0)
 LD 1 1(0)
 OUT 1 ; *(0x401) is expected to be shown
-LD 1 2(0)
+LD 1 0(0)
 OUT 1 ; *(0x402) is expected to be shown
 HLT

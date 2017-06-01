@@ -71,8 +71,7 @@ def parse_line(line):
         elif operation == 'out':
             Rs = int(operand[0])
             return Operation(op1, Rs, 0, op3 << 4)
-        elif operation == 'hlt':
-            return Operation(op1, 0, 0, op3 << 4)
+        elif operation == 'hlt': return Operation(op1, 0, 0, op3 << 4)
         else:
             Rd = int(operand[0])
             Rs = int(operand[1])
@@ -97,13 +96,13 @@ def parse_line(line):
             return Operation(op1, op2, Rb, d)
     elif operation == 'ld':
         op1 = 0b00
-        Rb = int(operand[0])
-        Ra, d = utils.parse_addr(operand[1])
+        Ra = int(operand[0])
+        Rb, d = utils.parse_addr(operand[1])
         return Operation(op1, Ra, Rb, d)
     elif operation == 'st':
         op1 = 0b01
-        Rb = int(operand[0])
-        Ra, d = utils.parse_addr(operand[1])
+        Ra = int(operand[0])
+        Rb, d = utils.parse_addr(operand[1])
         return Operation(op1, Ra, Rb, d)
     else:
         raise ValueError('Cannot parse `{}`',format(line))

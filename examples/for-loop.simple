@@ -1,0 +1,8 @@
+LI 0 10
+LI 1 0
+CMP 0 1
+BE 3
+ADI 0 -1
+OUT 0
+B 0 -5
+HLT
